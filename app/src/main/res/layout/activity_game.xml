@@ -138,6 +138,7 @@
                     android:text="Send"
                     android:id="@+id/sendButton"
                     android:layout_marginEnd="30dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginBottom="30dp"/>
 
@@ -146,7 +147,7 @@
                     android:layout_height="wrap_content"
                     android:text="clear"
                     android:id="@+id/clearButton"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginEnd="30dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/sendButton"
                     android:layout_marginBottom="30dp"/>

@@ -13,6 +13,15 @@ import com.zcf.drawgame.socket.SocketClient
 import com.zcf.drawgame.socket.SocketServer
 import kotlinx.android.synthetic.main.activity_entry.*
 import kotlinx.android.synthetic.main.activity_game.*
+import android.text.Spannable
+import android.text.style.ForegroundColorSpan
+import android.R.id.text2
+import android.graphics.Color
+import android.support.v4.view.MotionEventCompat
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.view.MotionEvent
+
 
 class GameActivity : AppCompatActivity(), SocketClient {
 
@@ -33,8 +42,7 @@ class GameActivity : AppCompatActivity(), SocketClient {
         setContentView(R.layout.activity_game)
 
         sendButton.setOnClickListener {
-            var drawing = inkView.getBitmap(resources.getColor(android.R.color.white))
-            socketServer.sendImage(drawing);
+            sendDrawing()
         }
 
         clearButton.setOnClickListener {
@@ -55,8 +63,6 @@ class GameActivity : AppCompatActivity(), SocketClient {
     }
 
     fun onOptionClicked(view: View) {
-
-
         val tv = view as TextView
         var result: Boolean
         if (tv.text.equals(currentQuiz?.question)) {
@@ -72,6 +78,11 @@ class GameActivity : AppCompatActivity(), SocketClient {
             Runnable {
                 socketServer.submit(result)
             }, 2000)
+    }
+
+    fun sendDrawing() {
+        var drawing = inkView.getBitmap(resources.getColor(android.R.color.white))
+        socketServer.sendImage(drawing);
     }
 
     override fun onReceiveDrawing(bmp: Bitmap) {
@@ -108,7 +119,17 @@ class GameActivity : AppCompatActivity(), SocketClient {
                 drawingImage.visibility = View.INVISIBLE
                 optionsLayout.visibility = View.GONE
 
-                msgTextView.text = "Please draw a ${quiz.question}"
+
+                val prefix = "Please draw a "
+                val spannable = SpannableString(prefix + quiz.question)
+
+                spannable.setSpan(
+                    ForegroundColorSpan(Color.RED),
+                    prefix.length,
+                    spannable.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                msgTextView.text = spannable
             } else {
                 drawerLayout.visibility = View.INVISIBLE
                 drawingImage.visibility = View.VISIBLE
@@ -143,4 +164,15 @@ class GameActivity : AppCompatActivity(), SocketClient {
         option3.setBackgroundColor(resources.getColor(R.color.orange))
 
     }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        val action = ev?.action
+        when (action) {
+            MotionEvent.ACTION_UP -> {
+                sendDrawing()
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
 }
