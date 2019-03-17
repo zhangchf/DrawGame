@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DrawGame</string>
+
+    <string name="change_server"><u>Change server</u></string>
 </resources>

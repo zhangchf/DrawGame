@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
+import com.zcf.drawgame.config.Config
 import com.zcf.drawgame.model.Quiz
 import com.zcf.drawgame.model.Score
 import io.socket.client.IO
@@ -14,12 +15,11 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 
+
 class SocketServer {
     val TAG = SocketServer::class.java.simpleName
 
-    companion object {
-        private val serverAddr = "http://10.128.60.21:3000"
-    }
+    val serverAddr = if (Config.serverAddrCustom.isEmpty()) Config.SERVER_ADDR_DEFAULT else Config.serverAddrCustom
 
 
     private lateinit var socket: Socket
